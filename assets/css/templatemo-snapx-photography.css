@@ -1419,6 +1419,10 @@ pricing-plans
   color: #afafaf;
   text-decoration: line-through;
 }
+.pricing-item ul.first-plan li:nth-child(5) {
+  color: #afafaf;
+  text-decoration: line-through;
+}
 
 .pricing-item ul.second-plan li:nth-child(5) {
   color: #afafaf;
