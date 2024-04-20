@@ -1,3 +1,7 @@
+<?php
+     include('database.php');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,6 +26,21 @@
     <link rel="stylesheet" href="assets/css/animate.css">
     <link rel="stylesheet"href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
 
+
+    <style>
+      .popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        padding: 20px;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+      }
+    </style>
   </head>
 
 <body>
@@ -44,7 +63,7 @@
                              <li><a href="packages.html">Packages</a></li>
                              <li><a href="about.html">About Us</a></li>
                              <li><a href="gallery.html">Gallery</a></li>
-                             <li><a href="users.html">Contact Us</a></li>
+                             <li><a href="contactUs.php">Contact Us</a></li>
                         </ul>
                         <!-- ***** Menu End ***** -->
                    </nav>
@@ -98,7 +117,7 @@
           </div>
         </div>
         <div class="col-lg-12">
-          <form id="contact" action="" method="post">
+        <form id="contact" action="<?php htmlspecialchars($_SERVER["PHP_SELF"]) ?>" method="post">
             <div class="row">
               <div class="col-lg-6">
                 <fieldset>
@@ -132,6 +151,9 @@
               </div>
             </div>
           </form>
+          <div class="popup" id="feedback-popup">
+            Feedback sent successfully!
+          </div>
         </div>
       </div>
     </div>
@@ -155,5 +177,48 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="script.js"></script>
   </body>
 </html>
+
+<?php
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Retrieve form data
+    $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
+    $telephone = filter_input(INPUT_POST, 'telephone', FILTER_SANITIZE_SPECIAL_CHARS);
+    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+    $subject = filter_input(INPUT_POST, 'subject', FILTER_SANITIZE_SPECIAL_CHARS);
+    $message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_SPECIAL_CHARS);
+
+    // Validate form data
+    $errors = array();
+    if (empty($name)) {
+        $errors[] = "Name is required";
+    }
+    if (empty($telephone)) {
+        $errors[] = "Telephone is required";
+    }
+    if (empty($email)) {
+        $errors[] = "Email is required";
+    }
+    // Check if there are any errors
+    if (empty($errors)) {
+        // Insert data into the database
+        $sql = "INSERT INTO feedback (name, telephone, email, subject, message) VALUES ('$name', '$telephone', '$email', '$subject', '$message')";
+        if (mysqli_query($conn, $sql)) {
+            echo "<script>var feedbackSuccess = true;</script>";
+        } else {
+            echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+        }
+    } else {
+        // Display errors
+        foreach ($errors as $error) {
+            echo $error . "<br>";
+        }
+    }
+    // Close database connection
+    mysqli_close($conn);
+}
+?>
