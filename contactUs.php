@@ -58,9 +58,9 @@ include('database.php');
             <ul class="nav">
               <li><a href="index.html" class="active">Home</a></li>
               <li><a href="packages.html">Packages</a></li>
-              <li><a href="about.html">About Us</a></li>
               <li><a href="gallery.html">Gallery</a></li>
               <li><a href="contactUs.php">Contact Us</a></li>
+              <li><a href="about.html">About Us</a></li>
             </ul>
             <!-- ***** Menu End ***** -->
           </nav>
